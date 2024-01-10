@@ -1,0 +1,137 @@
+<!-- my-post.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Posts</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <style>
+    h1 {
+        color: #252424;
+        margin: 10px 0;
+    }
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    .card-my-post {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    } 
+
+    .card-post-details {
+        margin: 10px;
+        p {
+          line-height: 1.5;
+        }
+    }
+
+    img {
+        width: 100%;
+        height: 184px;
+        object-fit: cover;
+        border-bottom: 1px solid #ddd;
+    }
+
+    p {
+        color: #666;
+    }
+    .edit-link {
+        display: block;
+        margin-top: 10px;
+        text-align: right;
+        text-decoration: none;
+        color: #3498db;
+        font-weight: bold;
+    }
+
+    
+  .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: auto;
+      margin-top: 20px;
+    }
+
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .content {
+        opacity: 0;
+    }
+    .content-main {
+      height: 100%;
+    }
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <h1>My Posts</h1>
+    <div class="loader" id="loader"></div>
+    <% if (user && user.posts && user.posts.length > 0) { %>
+      <div class="card-container content" id="content">
+        <% user.posts.forEach(post => { %>
+          <div class="card-my-post">
+            <img src="<%= post.image %>" alt="User Photo">
+            <div class="card-post-details">
+              <h3><%= post.title %></h3>
+              <p><%= post.caption %></p>
+              <div class="location">
+                <svg class="location-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 3.78 5.55 10.75 6.41 11.74.09.12.22.26.36.26s.27-.14.36-.26C10.45 19.75 16 12.78 16 9c0-3.87-3.13-7-7-7zm0 9c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
+                </svg>
+                <p class="location-text"><%= post.location %></p>
+              </div>
+              <!-- Add other post details here -->
+              
+              <% if (loggedInUser && user.uid === loggedInUser.uid) { %> 
+                <!-- Display edit button only for the posts created by the logged-in user -->
+                <a href="/edit-post/<%= post.id %>" class="edit-link">Edit</a>
+                <a href="/my-posts/user/delete/<%= post.id %>" class="edit-link">Delete</a>
+              <% } %> 
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    
+    
+    <% } else { %>
+      <p>No posts found.</p>
+    <% } %>
+    
+    <%- include('partials/footer') %>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+      // Simulasikan waktu pengambilan data
+      setTimeout(() => {
+        // Sembunyikan loader dan tampilkan konten
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('loader').style.position = 'abosolute';
+
+        document.getElementById('content').style.opacity = '100%';
+      }, 2000); // Ganti 2000 dengan waktu yang sesuai dengan pengambilan data sebenarnya
+
+      // Optional: Sembunyikan konten saat loading
+      // document.getElementById('content').style.display = 'none';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<h1>Hello</h1>
+
+<h1>Predictions for <%= selectedCity %></h1>
+
+<select id="citySelector" onchange="changeCity()">
+    <% for (let city of cities) { %>
+      <option value="<%= city %>" <%= city === selectedCity ? 'selected' : '' %>><%= city %></option>
+    <% } %>
+</select>
+
+<ul>
+    <% for (let prediction of predictions) { %>
+      <h1> <%= prediction.City %></h1>
+        <li><%= prediction.Category %></li>
+     
+    <% } %>
+</ul>
+
+
+<script>
+    function changeCity() {
+      var selectedCity = document.getElementById("citySelector").value;
+      window.location.href = '/recomend-wisata?cityName=' + selectedCity;
+    }
+</script>
+  

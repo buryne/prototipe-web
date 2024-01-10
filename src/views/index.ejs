@@ -1,0 +1,89 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jelajah Nusantara API</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <style>
+    
+  .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: auto;
+      margin-top: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .content {
+        opacity: 0;
+        transition: all 0.3s ease-in-out;
+    }
+    .content-main {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+ <section class="content-main">
+  <%- include('partials/header')%>
+
+
+
+  <% if (isAuthenticated) { %>
+    <div class="dashboard">
+      <img src="<%= photoURL %>" alt="Profile Image">
+      <h1>Welcome, <%= isAuthenticated ? username : 'Guest' %>!</h1>
+    </div>
+
+    <h3>Recomended for <%= selectedCity %></h3>
+
+    <select id="citySelector" onchange="changeCity()">
+      <% for (let city of cities) { %>
+        <option value="<%= city %>" <%= city === selectedCity ? 'selected' : '' %>><%= city %></option>
+      <% } %>
+    </select>
+
+    <div class="loader" id="loader"></div>
+
+    <div class="card-container content" id="content">
+      <% for (let prediction of predictions) { %>
+        <div class="card">
+          <h3><%= prediction.Place_Name %></h3>
+          <!-- <p><%= (parseFloat(prediction.Rating) / 10).toFixed(1) %></p> -->
+          <p><%= prediction.Category %></p>
+        </div>
+      <% } %>
+    </div>
+
+  <% } else { %>
+    <h3>Login first to post</h3>
+    <a href="/auth/google">Login With Google</a>
+  <% } %>
+  <%- include('partials/footer') %>
+ </section>
+  <script>
+     document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(() => {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('loader').style.position = 'abosolute';
+
+        document.getElementById('content').style.opacity = '100%';
+      }, 2000); 
+    });
+    function changeCity() {
+      var selectedCity = document.getElementById("citySelector").value;
+      window.location.href = '/web?cityName=' + selectedCity;
+    }
+  </script>
+</body>
+</html>
